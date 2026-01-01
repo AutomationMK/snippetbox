@@ -16,8 +16,14 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// parse the home page template file
-	ts, err := template.ParseFiles("./ui/html/pages/home.tmpl")
+	// initialize a slice for the two templates
+	files := []string{
+		"./ui/html/base.tmpl",
+		"./ui/html/pages/home.tmpl",
+	}
+
+	// parse the home page template files
+	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -25,13 +31,11 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// write the template to the response
-	err = ts.Execute(w, nil)
+	err = ts.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
-
-	w.Write([]byte("snippet Box"))
 }
 
 // snippetView is the snippet view handler function
