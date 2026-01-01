@@ -1,0 +1,10 @@
+*.log
+.DS_Store
+.env
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+/node_modules
+static/css/output.css
