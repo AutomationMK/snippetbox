@@ -7,6 +7,12 @@ import (
 
 // home is the home handler function
 func home(w http.ResponseWriter, r *http.Request) {
+	// check if route is exactly the home route
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
 	w.Write([]byte("snippet Box"))
 }
 
