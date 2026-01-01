@@ -11,8 +11,8 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "build": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css",
-    "watch": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch"
+    "build": "tailwindcss -i ./ui/static/css/input.css -o ./ui/static/css/output.css",
+    "watch": "tailwindcss -i ./ui/static/css/input.css -o ./ui/static/css/output.css --watch"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.18",
