@@ -28,8 +28,7 @@ func snippetCreate(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		// send a 405 status along with message
 		w.Header().Set("Allow", "POST")
-		w.WriteHeader(405)
-		w.Write([]byte("Method not allowed"))
+		http.Error(w, "Method Not Allowed", 405)
 		return
 	}
 	w.Write([]byte("Create a new snippet..."))
