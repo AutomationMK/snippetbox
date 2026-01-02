@@ -1,22 +1,31 @@
 {{define "base"}}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/output.css">
     <title>{{template "title" .}} - Snippetbox</title>
 </head>
 
-<body>
-    <header>
-        <h1><a href="/">Snippetbox</a></h1>
+<body class="bg-[#F1F3F6] text-[#34495E] overflow-y-scroll">
+    <header class="py-5">
+        <div class="flex justify-center mx-auto container px-4">
+            <h1 class="text-4xl"><a href="/">Snippetbox</a></h1>
+        </div>
     </header>
     {{template "nav" .}}
-    <main>
+    <main class="py-20">
         {{template "main" .}}
     </main>
-    <footer>Powered by Golang</footer>
+    <footer class="py-5">
+        <div class="flex justify-center mx-auto container px-4">
+            <h2 class="text-xl">
+                Powered by Golang
+                </h1>
+        </div>
+    </footer>
 </body>
 
 </html>
