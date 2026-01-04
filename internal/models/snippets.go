@@ -73,5 +73,44 @@ func (m *SnippetModel) Get(id int) (*Snippet, error) {
 
 // Latest returns the 10 recently created snippets
 func (m *SnippetModel) Latest() ([]*Snippet, error) {
-	return nil, nil
+	// write the sql statement to get latest snippets
+	stmt := `SELECT id, title, content, created, expires FROM snippets
+		WHERE expires > UTC_TIMESTAMP() ORDER BY id DESC LIMIT 10`
+
+	// use Query() method to execute the statement
+	rows, err := m.DB.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+	// make sure the sql.Rows resultset is closed
+	defer rows.Close()
+
+	// initialize an empty slice of snippets
+	snippets := []*Snippet{}
+
+	// use rows.Next to iterate through the resultset
+	// this prepares each row to be acted on by
+	// row.Scan() method.
+	for rows.Next() {
+		// create a pointer for a Snippet struct
+		s := &Snippet{}
+
+		// copy the values from each field of the
+		// current row into the new snippet
+		err = rows.Scan(&s.ID, &s.Title, &s.Content, &s.Expires)
+		if err != nil {
+			return nil, err
+		}
+		// append the scanned snippet to the slice of snippets
+		snippets = append(snippets, s)
+	}
+
+	// when rows.Next() is finished we call rows.Err()
+	// to retrieve any error encountered
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	// if no error then return the snippet slice
+	return snippets, nil
 }
