@@ -97,7 +97,7 @@ func (m *SnippetModel) Latest() ([]*Snippet, error) {
 
 		// copy the values from each field of the
 		// current row into the new snippet
-		err = rows.Scan(&s.ID, &s.Title, &s.Content, &s.Expires)
+		err = rows.Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.Expires)
 		if err != nil {
 			return nil, err
 		}
