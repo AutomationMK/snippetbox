@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
+
+	"github.com/AutomationMK/snippetbox/internal/models"
 )
 
 // home is the home handler function
@@ -46,7 +49,22 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
+	// use the SnippetModel get method to retrive
+	// the data for a specific record based on
+	// it's id. if no record then return 404
+	// not found http response
+	snippet, err := app.snippets.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	// display snippet as plain-text http response
+	fmt.Fprintf(w, "%+v", snippet)
 }
 
 // snippetCreate is the snippet create handler function
