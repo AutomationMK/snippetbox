@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
@@ -43,7 +44,31 @@ func (m *SnippetModel) Insert(title string, content string, expires int) (int, e
 
 // Get returns a specific snippet based on id
 func (m *SnippetModel) Get(id int) (*Snippet, error) {
-	return nil, nil
+	// write sql statement to get snippet from id
+	stmt := `SELECT id, title, content, created, expires FROM snippets
+		WHERE expires > UTC_TIMESTAMP() AND id = ?`
+
+	// use QueryRow() method to execute statement
+	row := m.DB.QueryRow(stmt, id)
+
+	// initialize a pointer to Snippet struct
+	s := &Snippet{}
+
+	// row.Scan() copies values from each field
+	// in sql.Row to the snippet struct
+	err := row.Scan(&s.ID, &s.Title, &s.Content, &s.Created, &s.Expires)
+	if err != nil {
+		// if no rows found then row.Scan()
+		// will return sql.ErrNoRows error.
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	// if no errors then return the snippet
+	return s, nil
 }
 
 // Latest returns the 10 recently created snippets
