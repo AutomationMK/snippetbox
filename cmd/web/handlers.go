@@ -39,7 +39,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 // snippetView is the snippet view handler function
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	// extract value from query string
-	// convert that valute to and integer
+	// convert that value to an integer
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		app.notFound(w)
