@@ -7,6 +7,13 @@ import (
 	"github.com/AutomationMK/snippetbox/internal/models"
 )
 
+// define template data struct to hold dynamic data
+// for html templates
+type templateData struct {
+	Snippet  *models.Snippet
+	Snippets []*models.Snippet
+}
+
 // newTemplateCache creates a template cache
 func newTemplateCache() (map[string]*template.Template, error) {
 	// initialize a new map to act as the cache
@@ -47,11 +54,4 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	}
 
 	return cache, nil
-}
-
-// define template data struct to hold dynamic data
-// for html templates
-type templateData struct {
-	Snippet  *models.Snippet
-	Snippets []*models.Snippet
 }
