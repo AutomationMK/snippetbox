@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"text/template"
 
 	"github.com/AutomationMK/snippetbox/internal/models"
 	_ "github.com/go-sql-driver/mysql"
@@ -13,18 +14,19 @@ import (
 
 // struct to hold application wide dependencies
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	snippets *models.SnippetModel
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	snippets      *models.SnippetModel
+	templateCache map[string]*template.Template
 }
 
 func main() {
 	// command line flag for http network address
 	// default value of :4000
 	addr := flag.String("addr", ":4000", "HTTP network address")
-	flag.Parse()
 	// command line flag for database connection
 	dsn := flag.String("dsn", "snippetbox:pass@/snippetbox?parseTime=true", "MySQL data source name")
+	flag.Parse()
 
 	// create logger for info messages
 	// has extra flags for any more info to add
@@ -40,11 +42,18 @@ func main() {
 	}
 	defer db.Close()
 
+	// initialize a new template cache...
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	// application struct containing dependencies
 	app := &application{
-		errorLog: errorLog,
-		infoLog:  infoLog,
-		snippets: &models.SnippetModel{DB: db},
+		errorLog:      errorLog,
+		infoLog:       infoLog,
+		snippets:      &models.SnippetModel{DB: db},
+		templateCache: templateCache,
 	}
 
 	// initialize a new http.Server struct
