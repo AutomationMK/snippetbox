@@ -6,6 +6,27 @@ import (
 	"runtime/debug"
 )
 
+// render helps render a template page
+func (app *application) render(w http.ResponseWriter, status int, page string, data *templateData) {
+	// retrieve the appropriate template set based
+	// on page name
+	ts, ok := app.templateCache[page]
+	if !ok {
+		err := fmt.Errorf("the template %s does not exist", page)
+		app.serverError(w, err)
+		return
+	}
+
+	// write out the provided HTTP status code
+	w.WriteHeader(status)
+
+	// execute the template set
+	err := ts.ExecuteTemplate(w, "base", data)
+	if err != nil {
+		app.serverError(w, err)
+	}
+}
+
 // serverError writes an error message and the
 // stack trace to the errorLog. then sends a
 // generic 500 internal server error response
